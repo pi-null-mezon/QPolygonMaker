@@ -19,7 +19,6 @@ MainWindow::MainWindow(QWidget *parent)
     if(!_dir.exists())
         _dir.mkpath(_dir.absolutePath());
     settings = new QSettings(_dir.absolutePath().append("/%1.ini").arg(APP_NAME),QSettings::IniFormat);
-
 }
 
 MainWindow::~MainWindow()

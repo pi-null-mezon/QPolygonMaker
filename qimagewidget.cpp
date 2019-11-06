@@ -8,7 +8,7 @@
 
 bool isNear(const QPointF &_lp, const QPointF &_rp)
 {
-    if(std::sqrt((_lp.x()-_rp.x())*(_lp.x()-_rp.x()) + (_lp.y()-_rp.y())*(_lp.y()-_rp.y())) < 0.0075)
+    if(std::sqrt((_lp.x()-_rp.x())*(_lp.x()-_rp.x()) + (_lp.y()-_rp.y())*(_lp.y()-_rp.y())) < 0.0085)
         return true;
     return false;
 }
@@ -30,9 +30,10 @@ void QImageWidget::paintEvent(QPaintEvent *_event)
         painter.drawImage(inscribedrect,image);
 
         QPen _pen = painter.pen();
-        _pen.setColor(Qt::red);
-        painter.setBrush(QColor(255,255,255,175));
+        _pen.setColor(Qt::blue);
+        painter.setBrush(QColor(255,255,255,150));
         painter.setPen(_pen);
+
 
         QVector<QPointF> abspoints;
         abspoints.reserve(points.size());
@@ -40,8 +41,17 @@ void QImageWidget::paintEvent(QPaintEvent *_event)
             abspoints.push_back(QPointF(points[i].x()*inscribedrect.width() + inscribedrect.x(),
                                         points[i].y()*inscribedrect.height() + inscribedrect.y()));
         painter.drawPolygon(abspoints);
-        for(int i = 0; i < points.size(); ++i)
+        for(int i = 0; i < points.size(); ++i) {
             painter.drawEllipse(abspoints[i],4,4);
+           /*painter.drawText(abspoints[i] - QPointF(-5,5),QString("%1;%2").arg(QString::number(points[i].x(),'f',2),
+                                                                               QString::number(points[i].y(),'f',2)));*/
+        }
+    } else {
+        QFont _font = painter.font();
+        _font.setPointSizeF(_font.pointSizeF()*2);
+        painter.setFont(_font);
+        painter.setPen(Qt::darkGray);
+        painter.drawText(rect(),Qt::AlignCenter,tr("drag and drop picture right here"));
     }
 }
 
@@ -77,7 +87,8 @@ void QImageWidget::mousePressEvent(QMouseEvent *event)
 void QImageWidget::mouseMoveEvent(QMouseEvent *event)
 {
     if(allowpointmove) {
-        QPointF _point((event->x() - inscribedrect.x())/inscribedrect.width(),(event->y() - inscribedrect.y())/inscribedrect.height());
+        QPointF _point((event->x()/scale - inscribedrect.x() - translation.x()/scale)/inscribedrect.width(),
+                       (event->y()/scale - inscribedrect.y() - translation.y()/scale)/inscribedrect.height());
         points[pointindex] = std::move(_point);
         update();
     }
