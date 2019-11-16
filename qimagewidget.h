@@ -46,7 +46,7 @@ private:
     QVector<QPointF> points;
     int pointindex;
     bool allowpointmove;
-    float scale;
+    qreal scale;
     QPoint translation;
     QPoint translationstart;
     QPoint translationend;

@@ -38,7 +38,8 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 void MainWindow::on_actionopenImage_triggered()
 {
     const QString _filename = QFileDialog::getOpenFileName(this,APP_NAME,settings->value("LastFile",QStandardPaths::writableLocation(QStandardPaths::DownloadLocation)).toString(),"Images (*.png *.jpeg *.jpg *.bmp)");
-    QImage _image = QImage(_filename);
+    qDebug("filename: %s",_filename.toUtf8().constData());
+    QImage _image(_filename);
     if(!_image.isNull()) {
         ui->widget->setImage(_image);
         settings->setValue("LastFile",_filename);

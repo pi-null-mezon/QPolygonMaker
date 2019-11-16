@@ -8,7 +8,7 @@
 
 bool isNear(const QPointF &_lp, const QPointF &_rp)
 {
-    if(std::sqrt((_lp.x()-_rp.x())*(_lp.x()-_rp.x()) + (_lp.y()-_rp.y())*(_lp.y()-_rp.y())) < 0.0085)
+    if(std::sqrt((_lp.x()-_rp.x())*(_lp.x()-_rp.x()) + (_lp.y()-_rp.y())*(_lp.y()-_rp.y())) < 0.005)
         return true;
     return false;
 }
@@ -31,7 +31,7 @@ void QImageWidget::paintEvent(QPaintEvent *_event)
 
         QPen _pen = painter.pen();
         _pen.setColor(Qt::blue);
-        painter.setBrush(QColor(255,255,255,150));
+        painter.setBrush(QColor(255,255,255,100));
         painter.setPen(_pen);
 
 
@@ -42,7 +42,7 @@ void QImageWidget::paintEvent(QPaintEvent *_event)
                                         points[i].y()*inscribedrect.height() + inscribedrect.y()));
         painter.drawPolygon(abspoints);
         for(int i = 0; i < points.size(); ++i) {
-            painter.drawEllipse(abspoints[i],4,4);
+            painter.drawEllipse(abspoints[i],3,3);
            /*painter.drawText(abspoints[i] - QPointF(-5,5),QString("%1;%2").arg(QString::number(points[i].x(),'f',2),
                                                                                QString::number(points[i].y(),'f',2)));*/
         }
@@ -113,13 +113,20 @@ void QImageWidget::mouseReleaseEvent(QMouseEvent *event)
 
 void QImageWidget::wheelEvent(QWheelEvent *event)
 {
+    const qreal _oldscale = scale;
     QPoint numDegrees = event->angleDelta() / 120;
     //qDebug("wheel: %d, %d",numDegrees.x(),numDegrees.y());
-    scale = scale + 0.1*numDegrees.y();
+    scale += 0.1 * numDegrees.y();
     if(scale < 1)
         scale = 1;
-    else if(scale > 5.0)
-        scale = 5.0;
+    else if(scale > 10.0)
+        scale = 10.0;
+    if(numDegrees.y() != 0) {
+        // Math is awesome!
+        translation =  event->pos()*(1.0 - scale/_oldscale) + translation * scale/_oldscale;
+        translationstart = translation;
+        translationend = translation;
+    }
     update();
 }
 
@@ -129,8 +136,8 @@ void QImageWidget::dropEvent(QDropEvent *_event)
 #ifdef Q_OS_WIN
     _filename = _filename.section('/',1);
 #endif
-    QImage _image(_filename);
-    qDebug("%s",_filename.toUtf8().constData());
+    QImage _image(_filename.trimmed());
+    qDebug("dropEvent: %s",_filename.toUtf8().constData());
     if(!_image.isNull())
         setImage(_image);
 }
