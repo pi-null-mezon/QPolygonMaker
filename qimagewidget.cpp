@@ -176,6 +176,12 @@ QRectF QImageWidget::makeInscribedRect(const QRectF &_bound, const QRectF &_sour
     return _output;
 }
 
+void QImageWidget::setPoints(const QVector<QPointF> &_points)
+{
+    points = _points;
+    update();
+}
+
 QString QImageWidget::getPoints() const
 {
     QString _str = "{";

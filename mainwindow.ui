@@ -34,6 +34,7 @@
      <string>Options</string>
     </property>
     <addaction name="actionopenImage"/>
+    <addaction name="actionLoadPoints"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -84,6 +85,14 @@
    </property>
    <property name="toolTip">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionLoadPoints">
+   <property name="text">
+    <string>Load points</string>
+   </property>
+   <property name="toolTip">
+    <string>Load points from user input</string>
    </property>
   </action>
  </widget>

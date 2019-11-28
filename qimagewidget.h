@@ -23,8 +23,9 @@ public:
 
     static QRectF makeInscribedRect(const QRectF &_bound,const QRectF &_source);
 
+    void    setPoints(const QVector<QPointF> &_points);
     QString getPoints() const;
-    void clearPoints();
+    void    clearPoints();
 
 public slots:
 

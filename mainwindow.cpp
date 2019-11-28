@@ -8,6 +8,8 @@
 
 #include <QFileDialog>
 
+#include "loadpointsdialog.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -86,4 +88,15 @@ void MainWindow::on_actionShowAbout_triggered()
 void MainWindow::on_actionExit_triggered()
 {
     close();
+}
+
+void MainWindow::on_actionLoadPoints_triggered()
+{
+    LoadPointsDialog dialog;
+    if(dialog.exec() == QDialog::Accepted) {
+        QVector<QPointF> _points = dialog.points();
+        if(_points.size() > 0) {
+            ui->widget->setPoints(_points);
+        }
+    }
 }
